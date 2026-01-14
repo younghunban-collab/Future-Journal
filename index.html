@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>크리스찬 미래저널</title>
+    <style>
+        :root {
+            /* 따뜻한 아이보리와 화이트 테마 */
+            --bg-gradient: linear-gradient(135deg, #fffcf0 0%, #f7f3e9 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-main: #5d5b54;
+            --text-sub: #8e8c84;
+            --accent-color: #d4a373; /* 따뜻한 베이지 포인트 */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            height: 85vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 공통 상단 시계 영역 */
+        .global-clock {
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-sub);
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .page { display: none; flex-direction: column; height: 100%; overflow-y: auto; padding-bottom: 40px; }
+        .page.active { display: flex; }
+
+        /* 첫 페이지 특화 디자인 */
+        #page1 { align-items: center; justify-content: space-between; text-align: center; }
+        .hero-section { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .title-kr { font-size: 1.8rem; font-weight: 700; margin: 5px 0; color: #4a4842; }
+        .title-en { font-size: 1.1rem; letter-spacing: 1px; color: var(--accent-color); margin-bottom: 10px; font-style: italic; }
+        .main-phrase { font-size: 1rem; color: var(--text-sub); margin-bottom: 30px; }
+
+        h2 { font-size: 1.3rem; text-align: center; margin-bottom: 20px; color: #4a4842; }
+
+        /* 입력 폼 스타일 */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; color: #7a7872; }
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-main);
+            box-sizing: border-box;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        textarea:focus { outline: none; border-color: var(--accent-color); }
+
+        /* 버튼 스타일 */
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 18px;
+            border: none;
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(212, 163, 115, 0.2);
+        }
+        .secondary-btn { background: #e9e4d9; color: #7a7872; box-shadow: none; margin-top: 5px; }
+        
+        /* 저널 리스트 스타일 */
+        .journal-item {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .journal-item:hover { transform: translateY(-2px); transition: 0.2s; }
+
+        footer { font-size: 0.75rem; color: #bcbab3; text-align: center; margin-top: 20px; }
+        
+        /* 스크롤바 숨기기 */
+        .page::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="global-clock" id="clockDisplay"></div>
+
+    <div id="page1" class="page active">
+        <div class="hero-section">
+            <p style="font-size: 0.85rem; color: var(--text-sub);">미래를 준비하는 리더</p>
+            <h1 class="title-kr">크리스찬 미래저널</h1>
+            <p class="title-en">Christian Future Journal</p>
+            <p class="main-phrase">"오늘을 적어 미래를 만든다."</p>
+        </div>
+        <button onclick="handleStartJournal()">오늘의 저널링하기</button>
+        <footer>Developed by Nathanban</footer>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>새로운 기록</h2>
+        <div class="input-group">
+            <label>1. 아침을 여는 믿음의 선포(하루를 ‘좋으신 하나님'에 대한 고백으로 시작하며, 매일 말씀 묵상과 믿음의 선포를 기록합니다.)</label>
+            <textarea id="entry1" rows="3" placeholder="깨달은 점, 느낀 점, 실천할 점"></textarea>
+        </div>
+        <div class="input-group">
+            <label>2. 그리스도 안에서의 정체성과 소명(전인적 구원은 복음의 본질적 열매입니다. 그리스도 안에서 ‘나는 누구인가요?’ 왜 그 일을 하며 살아가는지, 하나님 나라를 위한 나름의 이유와 답을 적어보세요.)</label>
+            <textarea id="entry2" rows="2" placeholder="그리스도 안에서 '나는 누구인가요?'"></textarea>
+        </div>
+        <div class="input-group">
+            <label>3. 감사의 제단 쌓기(부정적인 언어를 버리고 감사의 조건을 찾아 기록합니다. 하나님께서 오늘 내게 허락하신 사람, 동물, 식물, 미생물, 자연, 현상에 대한 감사 3가지 이상 적어보세요.)</label>
+            <textarea id="entry3" rows="3" placeholder="허락하신 모든 것에 대한 감사"></textarea>
+        </div>
+        <div class="input-group">
+            <label>4. 관계와 섬김(오늘 소그룹(구역) 식구들, 친구나 가족과 함께 시간 가는 줄 모르고 기쁘게 보냈던 돌봄과 교제의 시간을 써보세요. 경청, 공감, 힐링, 섬김, 이웃 축복하기 등)</label>
+            <textarea id="entry4" rows="2" placeholder="돌봄과 교제, 선한 영향력(세상에 선한 영향력을 미친 한 사람을 선정하고 그 이유를 적어보세요.)"></textarea>
+        </div>
+        <div class="input-group">
+            <label>5. 청지기의 삶과 일상 루틴(육체의 강건함을 위한 건강 루틴(규칙적 운동, 식사 관리)과 질병 치유를 위한 중보 기도를 기록합니다.)</label>
+            <input type="text" id="entry5" placeholder="운동, 식사 관리 등">
+        </div>
+        <div class="input-group">
+            <label>6. 하루의 회고와 치유 기도(오늘 화가 나는 일이 있었다면 가장 화났던 일을 주님 앞에 솔직히 적어보고, 치유를 위한 기도를 드립니다.)</label>
+            <textarea id="entry6" rows="2" placeholder="마음의 치유가 필요한 부분"></textarea>
+        </div>
+        <div class="input-group">
+            <label>7. 창조적 영성과 은혜의 시각화(오늘 1번부터 6번까지의 기록을 통해 느꼈던 은혜와 감동을 그림, 음악, 시, 사진, 또는 창조적 영성으로 표현하여 기록합니다.)</label>
+            <textarea id="entry7" rows="2" placeholder="그림, 시, 사진에 대한 설명"></textarea>
+        </div>
+        <button onclick="saveJournal()">기록 저장하기</button>
+        <button class="secondary-btn" onclick="showPage(1)">돌아가기</button>
+    </div>
+
+    <div id="page3" class="page">
+        <h2>나의 저널 보관함</h2>
+        <div id="journalList" style="flex-grow: 1;"></div>
+        <button class="secondary-btn" onclick="showPage(1)">홈으로 이동</button>
+    </div>
+
+    <div id="page4" class="page">
+        <h2>과거 기록 확인 및 수정</h2>
+        <div id="editForm">
+            </div>
+        <button id="updateBtn">수정 활성화</button>
+        <button id="saveUpdateBtn" style="display:none; background: #84a59d;">수정 내용 저장</button>
+        <button class="secondary-btn" onclick="showPage(3)">목록으로</button>
+    </div>
+
+    <div id="page5" class="page" style="text-align: center; justify-content: center;">
+        <div style="font-size: 3rem; margin-bottom: 20px;">🕊️</div>
+        <h2>수고하셨습니다.</h2>
+        <p style="color: var(--text-sub);">오늘의 한 걸음이 당신의 미래를 비춥니다.</p>
+        <button onclick="showPage(1)" style="margin-top: 30px;">처음으로 가기</button>
+    </div>
+</div>
+
+<script>
+    const labels = [
+        "1. 아침을 여는 믿음의 선포(하루를 ‘좋으신 하나님'에 대한 고백으로 시작하며, 매일 말씀 묵상과 믿음의 선포를 기록합니다.)",
+        "2. 그리스도 안에서의 정체성과 소명(전인적 구원은 복음의 본질적 열매입니다. 그리스도 안에서 ‘나는 누구인가요?’ 왜 그 일을 하며 살아가는지, 하나님 나라를 위한 나름의 이유와 답을 적어보세요.)",
+        "3. 감사의 제단 쌓기(부정적인 언어를 버리고 감사의 조건을 찾아 기록합니다. 하나님께서 오늘 내게 허락하신 사람, 동물, 식물, 미생물, 자연, 현상에 대한 감사 3가지 이상 적어보세요.)",
+        "4. 관계와 섬김(오늘 소그룹(구역) 식구들, 친구나 가족과 함께 시간 가는 줄 모르고 기쁘게 보냈던 돌봄과 교제의 시간을 써보세요. 경청, 공감, 힐링, 섬김, 이웃 축복하기 등 세상에 선한 영향력을 미친 한 사람을 선정하고 그 이유를 적어보세요.)",
+        "5. 청지기의 삶과 일상 루틴(육체의 강건함을 위한 건강 루틴(규칙적 운동, 식사 관리)과 질병 치유를 위한 중보 기도를 기록합니다.)",
+        "6. 하루의 회고와 치유 기도(오늘 화가 나는 일이 있었다면 가장 화났던 일을 주님 앞에 솔직히 적어보고, 치유를 위한 기도를 드립니다.)",
+        "7. 창조적 영성과 은혜의 시각화(오늘 1번부터 6번까지의 기록을 통해 느꼈던 은혜와 감동을 그림, 음악, 시, 사진, 또는 창조적 영성으로 표현하여 기록합니다.)"
+    ];
+
+    function updateClock() {
+        const now = new Date();
+        const days = ['일','월','화','수','목','금','토'];
+        const dateStr = `${now.getFullYear()}. ${now.getMonth()+1}. ${now.getDate()}. (${days[now.getDay()]})`;
+        const timeStr = now.toLocaleTimeString();
+        document.getElementById('clockDisplay').innerText = `${dateStr} ${timeStr}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function showPage(num) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + num).classList.add('active');
+        if(num === 3) renderList();
+    }
+
+    function handleStartJournal() {
+        const journals = JSON.parse(localStorage.getItem('journals') || '[]');
+        const today = new Date().toLocaleDateString();
+        if(journals.some(j => j.date === today)) showPage(3);
+        else showPage(2);
+    }
+
+    function saveJournal() {
+        const journals = JSON.parse(localStorage.getItem('journals') || '[]');
+        const newEntry = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString(),
+            content: Array.from({length:7}, (_, i) => document.getElementById('entry'+(i+1)).value)
+        };
+        journals.push(newEntry);
+        localStorage.setItem('journals', JSON.stringify(journals));
+        showPage(5);
+    }
+
+    function renderList() {
+        const listDiv = document.getElementById('journalList');
+        const journals = JSON.parse(localStorage.getItem('journals') || '[]');
+        listDiv.innerHTML = journals.slice().reverse().map(j => `
+            <div class="journal-item" onclick="viewDetail(${j.id})">
+                <span><strong>${j.date}</strong> 기록</span>
+                <span style="color: #accent-color;">보기 ></span>
+            </div>
+        `).join('');
+    }
+
+    function viewDetail(id) {
+        const journals = JSON.parse(localStorage.getItem('journals') || '[]');
+        const item = journals.find(j => j.id === id);
+        const editForm = document.getElementById('editForm');
+        
+        editForm.innerHTML = item.content.map((c, i) => `
+            <div class="input-group">
+                <label>${labels[i]}</label>
+                <textarea class="edit-entry" disabled rows="2">${c}</textarea>
+            </div>
+        `).join('');
+
+        const updateBtn = document.getElementById('updateBtn');
+        const saveUpdateBtn = document.getElementById('saveUpdateBtn');
+
+        updateBtn.style.display = 'block';
+        saveUpdateBtn.style.display = 'none';
+
+        updateBtn.onclick = () => {
+            document.querySelectorAll('.edit-entry').forEach(el => el.disabled = false);
+            updateBtn.style.display = 'none';
+            saveUpdateBtn.style.display = 'block';
+        };
+
+        saveUpdateBtn.onclick = () => {
+            const updated = Array.from(document.querySelectorAll('.edit-entry')).map(el => el.value);
+            const idx = journals.findIndex(j => j.id === id);
+            journals[idx].content = updated;
+            localStorage.setItem('journals', JSON.stringify(journals));
+            alert('기록이 수정되었습니다.');
+            showPage(3);
+        };
+
+        showPage(4);
+    }
+</script>
+
+</body>
+</html>
